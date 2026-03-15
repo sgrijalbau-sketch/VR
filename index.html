@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>David y Goliat VR</title>
+<script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+</head>
+
+<body>
+
+<a-scene>
+ 
+<!-- Cielo -->
+<a-sky color="#87CEEB"></a-sky>
+
+<!-- Suelo -->
+<a-plane rotation="-90 0 0" width="100" height="100" color="#c2b280"></a-plane>
+
+<!-- Cámara con cursor de mirada -->
+<a-entity camera look-controls position="0 1.6 5">
+<a-cursor fuse="true" fuse-timeout="1500" color="black"></a-cursor>
+</a-entity>
+
+<!-- David -->
+
+ <a-assets>
+    <a-asset-item id="modeloDavid" src="Hitem3d-1773611771933-v2.glb"></a-asset-item>
+  </a-assets>
+
+  <a-entity 
+    id="david" 
+    gltf-model="#modeloDavid" 
+    position="-2 2.5 -5" 
+    scale="5 5 5">
+  </a-entity>
+
+
+<!-- Piedra -->
+<a-sphere id="piedra" position="-2 1.5 -5" radius="0.1" color="gray" visible="false"></a-sphere>
+
+<!-- Goliat -->
+<a-box id="goliat"
+position="2 2 -10"
+depth="1"
+height="3"
+width="1"
+color="#555">
+</a-box>
+
+<!-- Texto para iniciar -->
+<a-text
+value="Mira aqui para iniciar la escena"
+position="0 3 -4"
+align="center"
+color="black"
+id="startButton">
+</a-text>
+
+<script>
+
+document.querySelector("#startButton").addEventListener("click", function(){
+
+// mostrar piedra
+let piedra = document.querySelector("#piedra");
+piedra.setAttribute("visible", true);
+
+// animacion piedra
+piedra.setAttribute("animation", {
+property: "position",
+to: "2 2 -10",
+dur: 2000
+});
+
+// Goliat cae después del impacto
+setTimeout(function(){
+document.querySelector("#goliat").setAttribute("animation",{
+property: "rotation",
+to: "90 0 0",
+dur: 1500
+});
+},2000);
+
+});
+
+</script>
+
+</a-scene>
+
+</body>
+</html>
