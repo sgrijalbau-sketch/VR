@@ -19,7 +19,15 @@
 
 <!-- Cámara con cursor de mirada -->
 <a-entity camera look-controls position="0 1.6 5">
-<a-cursor fuse="true" fuse-timeout="1500" color="black"></a-cursor>
+  <a-cursor 
+    id="cursor-visual"
+    fuse="true" 
+    fuse-timeout="1500" 
+    color="#000000"
+    geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+    animation__fusing="property: scale; startEvents: fusing; easing: easeInCubic; dur: 1500; from: 1 1 1; to: 0.1 0.1 0.1"
+    animation__mouseleave="property: scale; startEvents: mouseleave; easing: easeInCubic; dur: 500; to: 1 1 1">
+  </a-cursor>
 </a-entity>
 
 <!-- David -->
@@ -53,38 +61,66 @@
   </a-entity>
 
 <!-- Texto para iniciar -->
-<a-text
-value="Mira aqui para iniciar la escena"
-position="0 3 -4"
-alig= "center"
-color="black"
-id="startButton">
-</a-text>
+<a-entity id="startButton" class="clickable" position="0 3 -4">
+  <a-plane 
+    width="3" 
+    height="0.8" 
+    color="#222" 
+    material="opacity: 0.8">
+  </a-plane>
+  
+  <a-text
+    value="MIRA AQUÍ PARA INICIAR"
+    align="center"
+    color="white"
+    width="6">
+  </a-text>
+</a-entity>
 
 <script>
 
-document.querySelector("#startButton").addEventListener("click", function(){
+// Seleccionamos los elementos
+const david = document.querySelector("#david");
+const piedra = document.querySelector("#piedra");
+const goliat = document.querySelector("#goliat");
+const startButton = document.querySelector("#startButton");
 
-// mostrar piedra
-let piedra = document.querySelector("#piedra");
-piedra.setAttribute("visible", true);
-
-// animacion piedra
-piedra.setAttribute("animation", {
-property: "position",
-to: "2 2 -10",
-dur: 2000
+startButton.addEventListener("click", function() {
+  startButton.setAttribute("visible", "false");
+  startButton.classList.remove("clickable");
+  console.log("Escena iniciada");
 });
+david.addEventListener("click", function() {
+  // 1. Animación de David: Se inclina o avanza un poco
+  david.setAttribute("animation", {
+    property: "position",
+    to: "-1.5 2.5 -5", // Se mueve un poco hacia el centro
+    dur: 500,
+    easing: "easeOutQuad"
+  });
 
-// Goliat cae después del impacto
-setTimeout(function(){
-document.querySelector("#goliat").setAttribute("animation",{
-property: "rotation",
-to: "90 0 0",
-dur: 1500
-});
-},2000);
+  // 2. Lanzamiento de la piedra (esperamos 300ms para que coincida con el movimiento)
+  setTimeout(() => {
+    piedra.setAttribute("visible", true);
+    piedra.setAttribute("position", "-1.5 2.5 -5"); // Sale desde la nueva posición de David
+    
+    piedra.setAttribute("animation", {
+      property: "position",
+      to: "2 2.5 -5", // Directo a la cabeza de Goliat
+      dur: 1000,
+      easing: "linear"
+    });
+  }, 300);
 
+  // 3. Impacto en Goliat
+  setTimeout(() => {
+    goliat.setAttribute("animation", {
+      property: "rotation",
+      to: "90 0 0",
+      dur: 1500,
+      easing: "easeInBounce"
+    });
+  }, 1300); // 300ms de espera + 1000ms de vuelo
 });
 
 </script>
