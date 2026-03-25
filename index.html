@@ -19,7 +19,7 @@
 
 <!-- Cámara con cursor de mirada -->
 <a-entity camera look-controls position="0 1.6 5">
- <a-cursor>
+  <a-cursor 
     id="cursor-visual"
     fuse="true" 
     fuse-timeout="1500" 
@@ -34,12 +34,10 @@
 
 <a-assets>
   <a-asset-item id="modeloDavid" src="Hitem3d-1773611771933-v2.glb"></a-asset-item>
-  <a-asset-item id="modeloGoliat" src="Hitem3d-1773927456260-v1.glb"></a-asset-item>
 </a-assets>
 
    <a-entity 
     id="david" 
-    class="clickable"
     gltf-model="#modeloDavid" 
     position="-2 2.5 -5" 
     scale="4 4 4">
@@ -50,6 +48,11 @@
 <a-sphere id="piedra" position="-2 1.5 -5" radius="0.1" color="gray" visible="false"></a-sphere>
 
 <!-- Goliat -->
+  
+ <a-assets>
+  <a-asset-item id="modeloGoliat" src="Hitem3d-1773927456260-v1.glb"></a-asset-item>
+</a-assets>
+
    <a-entity 
     id="goliat" 
     gltf-model="#modeloGoliat" 
@@ -59,8 +62,19 @@
 
 <!-- Texto para iniciar -->
 <a-entity id="startButton" class="clickable" position="0 3 -4">
-  <a-plane width="3" height="0.8" color="#222" material="opacity: 0.8"> </a-plane>
-  <a-text value="MIRA AQUI PARA INICIAR" align="center" color="white" width="6"> </a-text>
+  <a-plane 
+    width="3" 
+    height="0.8" 
+    color="#222" 
+    material="opacity: 0.8">
+  </a-plane>
+  
+  <a-text
+    value="MIRA AQUI PARA INICIAR"
+    align="center"
+    color="white"
+    width="6">
+  </a-text>
 </a-entity>
 
 <script>
@@ -71,16 +85,12 @@ const piedra = document.querySelector("#piedra");
 const goliat = document.querySelector("#goliat");
 const startButton = document.querySelector("#startButton");
 
-let started = false;
- 
 startButton.addEventListener("click", function() {
   startButton.setAttribute("visible", "false");
-  started = true;
+  startButton.classList.remove("clickable");
   console.log("Escena iniciada");
 });
- 
 david.addEventListener("click", function() {
- if (!started) return;
   // 1. Animación de David: Se inclina o avanza un poco
   david.setAttribute("animation", {
     property: "position",
@@ -108,7 +118,7 @@ david.addEventListener("click", function() {
       property: "rotation",
       to: "90 0 0",
       dur: 1500,
-      easing: "easeInOutQuad"
+      easing: "easeInBounce"
     });
   }, 1300); // 300ms de espera + 1000ms de vuelo
 });
